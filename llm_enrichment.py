@@ -7,45 +7,7 @@ from typing import Any, Dict, List, Optional
 
 import requests
 
-
-def _resource_tags(resource_entry: Dict[str, Any]) -> Dict[str, Any]:
-    resource_obj = resource_entry.get("resource")
-    if not resource_obj:
-        return {}
-    vals = resource_obj.values or {}
-    return (vals.get("tags") or {}) or (vals.get("tags_all") or {})
-
-
-def route_table_is_public(route_table: Dict[str, Any]) -> bool:
-    for route in route_table.get("routes", []):
-        gateway_id = route.get("gateway_id")
-        cidr = route.get("cidr_block")
-        if gateway_id and cidr == "0.0.0.0/0":
-            return True
-    return False
-
-
-def infer_subnet_tier(subnet: Dict[str, Any], route_tables: List[Dict[str, Any]]) -> str:
-    if subnet.get("map_public_ip_on_launch"):
-        return "public"
-
-    tags = _resource_tags(subnet)
-    tier_tag = str(tags.get("Tier", "")).lower()
-    if "public" in tier_tag:
-        return "public"
-    if "private" in tier_tag:
-        return "private"
-
-    subnet_name = str(subnet.get("name") or "").lower()
-    if "public" in subnet_name:
-        return "public"
-    if "private" in subnet_name:
-        return "private"
-
-    for rt in route_tables:
-        if route_table_is_public(rt):
-            return "public"
-    return "private"
+from topology import infer_subnet_tier, route_table_is_public
 
 
 def build_bundle_snapshot(bundle: Dict[str, Any]) -> Dict[str, Any]:

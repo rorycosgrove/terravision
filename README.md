@@ -19,9 +19,11 @@ This exploration branch also includes a blue-sky LLM enhancement path that can g
 ## Repository Layout
 
 - `main.py`: CLI entrypoint and all parsing/rendering logic.
+- `layout_ir.py`: Deterministic layout intermediate representation consumed by the Miro renderer.
+- `topology.py`: Typed Terraform topology parser and association resolver.
 - `tfplan.json`: Example Terraform plan input.
 - `llm_enrichment.py`: Heuristic and LLM-backed enrichment pipeline for diagram narratives.
-- `scene_planner.py`: Adaptive scene composition for review rail, edge services, routing, and shared services lanes.
+- `scene_planner.py`: Legacy exploratory layout logic retained from the earlier prototype branch.
 - `skills/aws-architecture-advisor/SKILL.md`: Reusable prompt guidance for architecture review.
 
 ## Requirements
@@ -70,6 +72,8 @@ Basic dry-run (parse only, no Miro API calls):
 python main.py --plan tfplan.json --dry-run
 ```
 
+Dry-run now emits per-bundle tier diagnostics for subnets and route tables, including confidence and source.
+
 Live render to a Miro board:
 
 ```bash
@@ -93,6 +97,8 @@ Dump parsed model/bundles for inspection:
 ```bash
 python main.py --plan tfplan.json --dry-run --dump-model model_dump.json
 ```
+
+The dump now includes serialized `topology`, `render_bundles`, and `layout_ir` sections.
 
 ### CLI Arguments
 
@@ -128,7 +134,7 @@ python main.py --plan tfplan.json
 For each VPC bundle, the renderer creates a full page with:
 
 1. Header area (title and region/format metadata)
-2. Left panel: architecture boundaries and resources, organized by scene plan
+2. Left panel: architecture boundaries and resources, organized by a deterministic layout IR
 3. Right panel: architecture review cards derived from parsed data and optional LLM enrichment
 
 Within architecture boundaries, it draws:
@@ -146,8 +152,8 @@ Within architecture boundaries, it draws:
 
 ### Connection Rules
 
-- Uses explicit `aws_route_table_association` mappings when available.
-- Falls back to default route table linking if no explicit associations are found.
+- Resolves `aws_route_table_association` mappings from Terraform configuration references when plan values are unknown.
+- Does not invent subnet-to-route-table connectors when an association cannot be proven.
 - Connects public route table to IGW when present.
 - Connects private route tables to NAT gateways when present.
 
@@ -191,6 +197,13 @@ Dry run prints summary counts:
 - Subnets
 - Route tables
 - Route53 zones
+- Route table associations
+- Unresolved associations
+
+It also prints per-bundle diagnostics such as:
+
+- Subnet tier labels with confidence and source
+- Route table tier labels with confidence and source
 
 On live render success, it logs `Render complete`.
 
@@ -233,18 +246,23 @@ Export `MIRO_TOKEN` in your shell/session.
 
 ### 5) Layout overlaps
 
-Layout constants are in `render_reference_diagram` and can be tuned by adjusting:
-
-- page/header dimensions
-- AZ panel geometry
-- vertical spacing for resource placement
-- callout card geometry
+Layout is now produced in `layout_ir.py`. Tune deterministic page, lane, and AZ geometry there before changing the Miro adapter in `main.py`.
 
 ### 6) LLM enrichment silently falls back to heuristic mode
 
 - Confirm endpoint, model, and API key are all configured.
 - Confirm the endpoint is OpenAI-compatible and supports chat completions.
 - Invalid or partial LLM responses are intentionally ignored so diagram rendering remains deterministic.
+
+## Tests
+
+Run the current regression suite with:
+
+```bash
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+The suite currently covers topology association resolution, unresolved-association surfacing, tier derivation, and layout IR generation.
 
 ## Blue-Sky LLM Enhancement
 
