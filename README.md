@@ -18,7 +18,6 @@ It parses Terraform resources (VPCs, subnets, route tables, gateways, Route 53 z
 
 - `main.py`: CLI entrypoint and all parsing/rendering logic.
 - `tfplan.json`: Example Terraform plan input.
-- `model_dump.json`: Optional parsed model output (if generated).
 
 ## Requirements
 
