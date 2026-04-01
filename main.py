@@ -13,6 +13,9 @@ from typing import Any, Dict, List, Optional, Tuple, Set
 
 import requests
 
+from llm_enrichment import enrich_bundle, resolve_llm_config
+from scene_planner import build_scene_plan
+
 
 MIRO_API_BASE = "https://api.miro.com/v2"
 
@@ -476,6 +479,45 @@ def create_labeled_resource(
     return shape_id, shape_id
 
 
+def create_review_card(
+    miro: MiroClient,
+    board_id: str,
+    x: float,
+    y: float,
+    width: int,
+    height: int,
+    title: str,
+    body_lines: List[str],
+    accent_fill: str,
+    accent_border: str,
+) -> None:
+    safe_title = html_escape(title)
+    safe_lines = [html_escape(line) for line in body_lines if line]
+    content = "".join(f"<p style='font-size:13px;color:#1F2937;line-height:1.65;margin:0 0 10px 0'>{line}</p>" for line in safe_lines)
+    miro.create_shape(
+        board_id,
+        f"<p style='font-size:15px;color:#0F172A;font-weight:900;letter-spacing:0.2px;margin:0 0 16px 0'><strong>{safe_title}</strong></p>{content}",
+        x,
+        y,
+        width,
+        height,
+        fill_color="#FFFFFF",
+        border_color="#CBD5E1",
+        border_width=2,
+    )
+    miro.create_shape(
+        board_id,
+        "",
+        x - (width / 2) + 10,
+        y,
+        20,
+        height - 18,
+        fill_color=accent_fill,
+        border_color=accent_border,
+        border_width=2,
+    )
+
+
 def render_vpc_frame(
     miro: MiroClient,
     board_id: str,
@@ -723,18 +765,11 @@ def render_reference_diagram(
     board_id: str,
     bundles: List[Dict[str, Any]],
     prefer_icons: bool,
+    llm_config: Optional[Dict[str, Optional[str]]] = None,
     center_x: float = 0,
     center_y: float = 0,
 ) -> None:
-    page_w = 2900
-    page_h = 1900
-    header_h = 130
-    left_w = 2050
-    right_w = 700
-    page_gap_y = 2200
-
     for b_idx, bundle in enumerate(bundles):
-        page_center_y = center_y + (b_idx * page_gap_y)
         vpc = bundle["vpc"]
         subnets = sorted(bundle["subnets"], key=lambda s: (s.get("availability_zone", ""), s.get("cidr_block", "")))
         route_tables = sorted(bundle["route_tables"], key=lambda rt: rt.get("name", ""))
@@ -749,6 +784,18 @@ def render_reference_diagram(
             or (vpc_resource.values.get("tags_all") or {}).get("Region")
             or "unknown-region"
         )
+
+        enrichment = enrich_bundle(bundle, **(llm_config or {}))
+        scene = build_scene_plan(bundle, enrichment, subnet_tier)
+        page_w = scene["page"]["width"]
+        page_h = scene["page"]["height"]
+        header_h = scene["page"]["header_height"]
+        page_gap_y = scene["page"]["gap_y"]
+        left_w = scene["rails"]["canvas_width"]
+        right_w = scene["rails"]["review_width"]
+        review_card_height = scene["rails"]["review_card_height"]
+        review_card_gap = scene["rails"]["review_card_gap"]
+        page_center_y = center_y + (b_idx * page_gap_y)
 
         miro.create_frame(board_id, f"AWS Reference Architecture ({vpc_region})", center_x, page_center_y, page_w, page_h)
 
@@ -783,58 +830,44 @@ def render_reference_diagram(
 
         right_x = center_x + 1020
         right_y = left_y
-        miro.create_frame(board_id, "Callouts", right_x, right_y, right_w, left_h)
-
-        # Generate relevant callouts based on actual architecture
-        subnet_count = len(subnets) if subnets else 0
-        public_count = len([s for s in subnets if subnet_tier(s, route_tables) == "public"]) if subnets else 0
-        private_count = len([s for s in subnets if subnet_tier(s, route_tables) == "private"]) if subnets else 0
-        igw_count = len(igws) if igws else 0
-        nat_count = len(nat_gws) if nat_gws else 0
-        rt_count = len(route_tables) if route_tables else 0
-        zone_count = len(zones) if zones else 0
-        
-        nat_text = " and NAT Gateway" if nat_count > 0 else ""
-        igw_text = f"{igw_count} Internet Gateway" if igw_count > 0 else "Internet connectivity"
-        rt_text = f"{rt_count} route table(s)" if rt_count > 0 else "routing configured"
-        zone_text = f"{zone_count} Route 53 hosted zone(s)" if zone_count > 0 else "DNS"
-        
-        callout_texts = [
-            f"VPC {vpc.get('cidr_block', 'network')} spans {subnet_count} subnet(s): {public_count} public and {private_count} private across multiple availability zones.",
-            f"Network layer includes {rt_text}. Internet access via {igw_text}{nat_text} enables private subnet egress patterns.",
-            f"Service discovery via {zone_text}. Architecture mapped from Terraform plan with explicit connectivity paths.",
-        ]
-        callout_colors = ["#FF9900", "#1F51B6", "#139B3D"]
-        callout_borders = ["#CC7700", "#163A91", "#0E6B2F"]
-        for c_idx, text in enumerate(callout_texts):
-            y = right_y - 480 + c_idx * 250
-            safe_text = html_escape(text)
-            
-            # Left color bar with number
-            miro.create_shape(
-                board_id,
-                f"<p style='font-size:48px;color:#FFFFFF;font-weight:900;text-align:center;line-height:1'>{c_idx + 1}</p>",
-                right_x - 290,
-                y,
-                70,
-                220,
-                fill_color=callout_colors[c_idx],
-                border_color=callout_borders[c_idx],
-                border_width=3,
-            )
-            
-            # Main text box with subtle styling
-            miro.create_shape(
-                board_id,
-                f"<p style='font-size:13px;color:#1F2937;line-height:1.9;font-weight:500;padding:16px'>{safe_text}</p>",
-                right_x + 75,
-                y,
-                490,
-                220,
-                fill_color="#FFFFFF",
-                border_color="#D1D5DB",
-                border_width=2,
-            )
+        miro.create_frame(board_id, "Architecture Review", right_x, right_y, right_w, left_h)
+        review = scene["review"]
+        create_review_card(
+            miro,
+            board_id,
+            right_x,
+            right_y - 470,
+            640,
+            review_card_height,
+            f"Terraform Summary ({str(review['mode']).upper()})",
+            [review["summary"]],
+            "#FF9900",
+            "#CC7700",
+        )
+        create_review_card(
+            miro,
+            board_id,
+            right_x,
+            right_y - 470 + review_card_height + review_card_gap,
+            640,
+            review_card_height,
+            "Observed Risks",
+            review["risks"][:4],
+            "#DC2626",
+            "#991B1B",
+        )
+        create_review_card(
+            miro,
+            board_id,
+            right_x,
+            right_y - 470 + ((review_card_height + review_card_gap) * 2),
+            640,
+            review_card_height,
+            "Terraform Observations",
+            review["opportunities"][:4],
+            "#2563EB",
+            "#1D4ED8",
+        )
 
         connectors_seen: Set[Tuple[str, str, str]] = set()
 
@@ -855,7 +888,7 @@ def render_reference_diagram(
 
         miro.create_frame(board_id, f"AWS Account ({vpc_region})", section_x, section_y, section_w, section_inner_h)
         vpc_w = section_w - 120
-        vpc_h = section_inner_h - 130
+        vpc_h = min(section_inner_h - 130, scene["vpc"]["height"])
         vpc_x = section_x
         vpc_y = section_y + 24
         miro.create_frame(
@@ -883,10 +916,27 @@ def render_reference_diagram(
         if not az_names:
             az_names = ["regional"]
 
-        az_w = max(360, int((vpc_w - 180) / len(az_names)))
-        az_h = int(vpc_h - 170)
-        az_start_x = vpc_x - ((len(az_names) - 1) * (az_w + 30) / 2)
-        az_y = vpc_y + 20
+        az_w = scene["az"]["width"]
+        az_h = scene["vpc"]["az_height"]
+        az_gap = scene["az"]["gap"]
+        az_start_x = vpc_x - ((len(az_names) - 1) * (az_w + az_gap) / 2)
+        az_y = vpc_y + (scene["vpc"]["edge_lane_height"] / 2) + 40
+
+        edge_lane_y = vpc_y - (vpc_h / 2) + 110
+        routing_lane_y = az_y + (az_h / 2) + 120
+        shared_services_y = routing_lane_y + (scene["vpc"]["routing_lane_height"] / 2) + 110
+
+        miro.create_shape(
+            board_id,
+            "<p style='font-size:12px;color:#0F172A;font-weight:900;letter-spacing:0.4px'><strong>EDGE SERVICES</strong></p>",
+            vpc_x,
+            edge_lane_y - 38,
+            vpc_w - 120,
+            42,
+            fill_color="#FFF7ED",
+            border_color="#FDBA74",
+            border_width=2,
+        )
 
         subnets_by_az: Dict[str, List[Dict[str, Any]]] = {az: [] for az in az_names}
         for subnet in subnets:
@@ -898,7 +948,7 @@ def render_reference_diagram(
         private_subnet_ids: List[str] = []
 
         for az_idx, az in enumerate(az_names):
-            az_x = az_start_x + az_idx * (az_w + 30)
+            az_x = az_start_x + az_idx * (az_w + az_gap)
             miro.create_frame(board_id, f"Availability Zone {az}", az_x, az_y, az_w, az_h)
             # AZ header styling
             miro.create_shape(
@@ -922,7 +972,7 @@ def render_reference_diagram(
                     board_id,
                     "<p style='font-size:13px;color:#FFFFFF;font-weight:900;letter-spacing:0.5px'><strong>PUBLIC TIER</strong></p>",
                     az_x,
-                    az_y - (az_h / 2) + 70,
+                    az_y - (az_h / 2) + 90,
                     az_w - 40,
                     60,
                     fill_color="#10B981",
@@ -936,7 +986,7 @@ def render_reference_diagram(
                         board_id,
                         label,
                         az_x,
-                        az_y - (az_h / 2) + 175 + s_idx * 200,
+                        az_y - (az_h / 2) + 215 + s_idx * 190,
                         "public_subnet",
                         prefer_icons,
                     )
@@ -949,7 +999,7 @@ def render_reference_diagram(
                     board_id,
                     "<p style='font-size:13px;color:#FFFFFF;font-weight:900;letter-spacing:0.5px'><strong>PRIVATE TIER</strong></p>",
                     az_x,
-                    az_y + 35,
+                    az_y + 15,
                     az_w - 40,
                     60,
                     fill_color="#1F51B6",
@@ -963,7 +1013,7 @@ def render_reference_diagram(
                         board_id,
                         label,
                         az_x,
-                        az_y + 200 + s_idx * 200,
+                        az_y + 220 + s_idx * 190,
                         "private_subnet",
                         prefer_icons,
                     )
@@ -972,27 +1022,26 @@ def render_reference_diagram(
                     connect(private_band, node_id)
 
         rt_ids_by_name: Dict[str, str] = {}
-        rt_x = vpc_x + (vpc_w / 2) - 330
-        rt_y = vpc_y + (vpc_h / 2) - 120
-        # Route Table section header
+        rt_x = vpc_x
+        rt_y = routing_lane_y
         miro.create_shape(
             board_id,
             "<p style='font-size:12px;color:#FFFFFF;font-weight:900;letter-spacing:0.5px'><strong>ROUTE TABLES</strong></p>",
             rt_x,
-            rt_y - 70,
-            300,
-            40,
+            rt_y - 80,
+            620,
+            44,
             fill_color="#7C3AED",
             border_color="#5A1FB5",
             border_width=2,
         )
-        rt_y_items = rt_y + 40
-        for rt in route_tables:
+        rt_spacing = 340
+        rt_start_x = vpc_x - ((max(0, len(route_tables) - 1)) * rt_spacing / 2)
+        for index, rt in enumerate(route_tables):
             tier = "Public" if infer_route_table_tier(rt) == "public" else "Private"
             label = f"{tier} Route Table\n{rt.get('name') or rt['route_table_id']}"
-            rt_id, _ = create_labeled_resource(miro, board_id, label, rt_x, rt_y_items, "route_table", prefer_icons)
+            rt_id, _ = create_labeled_resource(miro, board_id, label, rt_start_x + index * rt_spacing, rt_y, "route_table", prefer_icons)
             rt_ids_by_name[rt.get("tf_name")] = rt_id
-            rt_y_items += 180
 
         subnet_by_assoc: Dict[Tuple[Optional[str], Optional[str]], Dict[str, Any]] = {}
         for subnet in subnets:
@@ -1021,8 +1070,8 @@ def render_reference_diagram(
                 miro,
                 board_id,
                 "Internet Gateway",
-                vpc_x - (vpc_w / 2) + 230,
-                vpc_y - (vpc_h / 2) + 120,
+                vpc_x - 360,
+                edge_lane_y + 30,
                 "igw",
                 prefer_icons,
             )
@@ -1031,35 +1080,43 @@ def render_reference_diagram(
                 connect(first_rt_id, igw_id)
 
         if nat_gws:
-            nat_y = vpc_y - (vpc_h / 2) + 290
-            for nat in nat_gws:
+            nat_start_x = vpc_x + 60
+            for index, nat in enumerate(nat_gws):
                 nat_id, _ = create_labeled_resource(
                     miro,
                     board_id,
                     f"NAT Gateway\n{nat.get('name') or nat['address']}",
-                    vpc_x - (vpc_w / 2) + 230,
-                    nat_y,
+                    nat_start_x + (index * 220),
+                    edge_lane_y + 30,
                     "nat",
                     prefer_icons,
                 )
                 for rt_id in rt_ids_by_name.values():
                     connect(rt_id, nat_id)
-                nat_y += 120
 
         if zones:
-            zone_x = vpc_x + (vpc_w / 2) - 40
-            zone_y = vpc_y + (vpc_h / 2) + 20
-            for zone in zones:
+            miro.create_shape(
+                board_id,
+                "<p style='font-size:12px;color:#0F172A;font-weight:900;letter-spacing:0.4px'><strong>SHARED SERVICES</strong></p>",
+                vpc_x,
+                shared_services_y - 70,
+                620,
+                44,
+                fill_color="#EFF6FF",
+                border_color="#93C5FD",
+                border_width=2,
+            )
+            zone_start_x = vpc_x - ((max(0, len(zones) - 1)) * 280 / 2)
+            for index, zone in enumerate(zones):
                 create_labeled_resource(
                     miro,
                     board_id,
                     f"Amazon Route 53\nPrivate Hosted Zone\n{zone.get('name')}",
-                    zone_x,
-                    zone_y,
+                    zone_start_x + (index * 280),
+                    shared_services_y,
                     "route53",
                     prefer_icons,
                 )
-                zone_y += 170
 
 
 def save_model(path: str, model: Dict[str, Any]) -> None:
@@ -1081,6 +1138,10 @@ def main() -> int:
     parser.add_argument("--prefer-icons", dest="prefer_icons", action="store_true", default=True, help="Try AWS icons first; fall back to shapes on failure (default: enabled)")
     parser.add_argument("--no-icons", dest="prefer_icons", action="store_false", help="Disable icons and use only shapes")
     parser.add_argument("--dump-model", help="Write parsed AWS model JSON to this path")
+    parser.add_argument("--llm-endpoint", help="OpenAI-compatible chat completions endpoint for architecture enrichment")
+    parser.add_argument("--llm-model", help="LLM model name used for architecture enrichment")
+    parser.add_argument("--llm-api-key-env", default="TERRAVISION_LLM_API_KEY", help="Environment variable name containing the LLM API key")
+    parser.add_argument("--skills-dir", default="skills", help="Directory containing reusable skill prompts for LLM enrichment")
     args = parser.parse_args()
 
     board_id, token = resolve_live_config(args)
@@ -1111,6 +1172,10 @@ def main() -> int:
         save_model(args.dump_model, {"model": model, "bundles": bundles})
         log(f"Wrote model to {args.dump_model}")
 
+    llm_config = resolve_llm_config(args)
+    llm_enabled = bool(llm_config.get("llm_endpoint") and llm_config.get("llm_model") and llm_config.get("llm_api_key"))
+    log(f"Callout enrichment: {'LLM' if llm_enabled else 'heuristic'}")
+
     if args.dry_run:
         return 0
 
@@ -1122,6 +1187,7 @@ def main() -> int:
             board_id=board_id,
             bundles=bundles,
             prefer_icons=args.prefer_icons,
+            llm_config=llm_config,
             center_x=0,
             center_y=0,
         )
