@@ -1,0 +1,297 @@
+{
+  "model": {
+    "vpcs": {
+      "module.vpc_eu_west_1.aws_vpc.this": {
+        "address": "module.vpc_eu_west_1.aws_vpc.this",
+        "id": "module.vpc_eu_west_1.aws_vpc.this",
+        "cidr_block": "10.20.0.0/16",
+        "name": "aws-network-default-vpc",
+        "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_vpc.this', rtype='aws_vpc', name='this', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_generated_ipv6_cidr_block': None, 'cidr_block': '10.20.0.0/16', 'enable_dns_hostnames': True, 'enable_dns_support': True, 'instance_tenancy': 'default', 'ipv4_ipam_pool_id': None, 'ipv4_netmask_length': None, 'ipv6_ipam_pool_id': None, 'ipv6_netmask_length': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-1'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-1'}}, depends_on=[], module_path='module.vpc_eu_west_1')"
+      },
+      "module.vpc_eu_west_2.aws_vpc.this": {
+        "address": "module.vpc_eu_west_2.aws_vpc.this",
+        "id": "module.vpc_eu_west_2.aws_vpc.this",
+        "cidr_block": "10.21.0.0/16",
+        "name": "aws-network-default-vpc",
+        "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_vpc.this', rtype='aws_vpc', name='this', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_generated_ipv6_cidr_block': None, 'cidr_block': '10.21.0.0/16', 'enable_dns_hostnames': True, 'enable_dns_support': True, 'instance_tenancy': 'default', 'ipv4_ipam_pool_id': None, 'ipv4_netmask_length': None, 'ipv6_ipam_pool_id': None, 'ipv6_netmask_length': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-2'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-2'}}, depends_on=[], module_path='module.vpc_eu_west_2')"
+      }
+    },
+    "subnets": {
+      "module.vpc_eu_west_1.aws_subnet.private[\"01\"]": {
+        "address": "module.vpc_eu_west_1.aws_subnet.private[\"01\"]",
+        "vpc_id": null,
+        "subnet_id": "module.vpc_eu_west_1.aws_subnet.private[\"01\"]",
+        "cidr_block": "10.20.1.0/24",
+        "availability_zone": "eu-west-1a",
+        "name": "aws-network-default-private-01",
+        "tf_name": "private",
+        "assoc_name": "private",
+        "assoc_index": "01",
+        "map_public_ip_on_launch": false,
+        "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_subnet.private[\"01\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-1a', 'cidr_block': '10.20.1.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+      },
+      "module.vpc_eu_west_1.aws_subnet.private[\"02\"]": {
+        "address": "module.vpc_eu_west_1.aws_subnet.private[\"02\"]",
+        "vpc_id": null,
+        "subnet_id": "module.vpc_eu_west_1.aws_subnet.private[\"02\"]",
+        "cidr_block": "10.20.2.0/24",
+        "availability_zone": "eu-west-1b",
+        "name": "aws-network-default-private-02",
+        "tf_name": "private",
+        "assoc_name": "private",
+        "assoc_index": "02",
+        "map_public_ip_on_launch": false,
+        "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_subnet.private[\"02\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-1b', 'cidr_block': '10.20.2.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+      },
+      "module.vpc_eu_west_2.aws_subnet.private[\"01\"]": {
+        "address": "module.vpc_eu_west_2.aws_subnet.private[\"01\"]",
+        "vpc_id": null,
+        "subnet_id": "module.vpc_eu_west_2.aws_subnet.private[\"01\"]",
+        "cidr_block": "10.21.1.0/24",
+        "availability_zone": "eu-west-2a",
+        "name": "aws-network-default-private-01",
+        "tf_name": "private",
+        "assoc_name": "private",
+        "assoc_index": "01",
+        "map_public_ip_on_launch": false,
+        "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_subnet.private[\"01\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-2a', 'cidr_block': '10.21.1.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+      },
+      "module.vpc_eu_west_2.aws_subnet.private[\"02\"]": {
+        "address": "module.vpc_eu_west_2.aws_subnet.private[\"02\"]",
+        "vpc_id": null,
+        "subnet_id": "module.vpc_eu_west_2.aws_subnet.private[\"02\"]",
+        "cidr_block": "10.21.2.0/24",
+        "availability_zone": "eu-west-2b",
+        "name": "aws-network-default-private-02",
+        "tf_name": "private",
+        "assoc_name": "private",
+        "assoc_index": "02",
+        "map_public_ip_on_launch": false,
+        "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_subnet.private[\"02\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-2b', 'cidr_block': '10.21.2.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+      }
+    },
+    "route_tables": {
+      "module.vpc_eu_west_1.aws_route_table.private": {
+        "address": "module.vpc_eu_west_1.aws_route_table.private",
+        "route_table_id": "module.vpc_eu_west_1.aws_route_table.private",
+        "vpc_id": null,
+        "name": "aws-network-default-private-rt",
+        "tf_name": "private",
+        "routes": [],
+        "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_route_table.private', rtype='aws_route_table', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+      },
+      "module.vpc_eu_west_2.aws_route_table.private": {
+        "address": "module.vpc_eu_west_2.aws_route_table.private",
+        "route_table_id": "module.vpc_eu_west_2.aws_route_table.private",
+        "vpc_id": null,
+        "name": "aws-network-default-private-rt",
+        "tf_name": "private",
+        "routes": [],
+        "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_route_table.private', rtype='aws_route_table', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+      }
+    },
+    "route_table_associations": [
+      {
+        "address": "module.vpc_eu_west_1.aws_route_table_association.private[\"01\"]",
+        "assoc_name": "private",
+        "assoc_index": "01",
+        "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_route_table_association.private[\"01\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+      },
+      {
+        "address": "module.vpc_eu_west_1.aws_route_table_association.private[\"02\"]",
+        "assoc_name": "private",
+        "assoc_index": "02",
+        "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_route_table_association.private[\"02\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+      },
+      {
+        "address": "module.vpc_eu_west_2.aws_route_table_association.private[\"01\"]",
+        "assoc_name": "private",
+        "assoc_index": "01",
+        "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_route_table_association.private[\"01\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+      },
+      {
+        "address": "module.vpc_eu_west_2.aws_route_table_association.private[\"02\"]",
+        "assoc_name": "private",
+        "assoc_index": "02",
+        "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_route_table_association.private[\"02\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+      }
+    ],
+    "route53_zones": [
+      {
+        "address": "module.r53.aws_route53_zone.private",
+        "name": "prod.internal",
+        "vpcs": [
+          {
+            "vpc_region": "eu-west-1"
+          },
+          {
+            "vpc_region": "eu-west-2"
+          }
+        ],
+        "resource": "PlannedResource(address='module.r53.aws_route53_zone.private', rtype='aws_route53_zone', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'comment': 'Managed by Terraform', 'delegation_set_id': None, 'force_destroy': False, 'name': 'prod.internal', 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-zone', 'Project': 'aws-network'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-zone', 'Project': 'aws-network'}, 'timeouts': None, 'vpc': [{'vpc_region': 'eu-west-1'}, {'vpc_region': 'eu-west-2'}]}, depends_on=[], module_path='module.r53')"
+      }
+    ],
+    "internet_gateways": [],
+    "nat_gateways": []
+  },
+  "bundles": [
+    {
+      "vpc": {
+        "address": "module.vpc_eu_west_1.aws_vpc.this",
+        "id": "module.vpc_eu_west_1.aws_vpc.this",
+        "cidr_block": "10.20.0.0/16",
+        "name": "aws-network-default-vpc",
+        "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_vpc.this', rtype='aws_vpc', name='this', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_generated_ipv6_cidr_block': None, 'cidr_block': '10.20.0.0/16', 'enable_dns_hostnames': True, 'enable_dns_support': True, 'instance_tenancy': 'default', 'ipv4_ipam_pool_id': None, 'ipv4_netmask_length': None, 'ipv6_ipam_pool_id': None, 'ipv6_netmask_length': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-1'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-1'}}, depends_on=[], module_path='module.vpc_eu_west_1')"
+      },
+      "subnets": [
+        {
+          "address": "module.vpc_eu_west_1.aws_subnet.private[\"01\"]",
+          "vpc_id": null,
+          "subnet_id": "module.vpc_eu_west_1.aws_subnet.private[\"01\"]",
+          "cidr_block": "10.20.1.0/24",
+          "availability_zone": "eu-west-1a",
+          "name": "aws-network-default-private-01",
+          "tf_name": "private",
+          "assoc_name": "private",
+          "assoc_index": "01",
+          "map_public_ip_on_launch": false,
+          "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_subnet.private[\"01\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-1a', 'cidr_block': '10.20.1.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+        },
+        {
+          "address": "module.vpc_eu_west_1.aws_subnet.private[\"02\"]",
+          "vpc_id": null,
+          "subnet_id": "module.vpc_eu_west_1.aws_subnet.private[\"02\"]",
+          "cidr_block": "10.20.2.0/24",
+          "availability_zone": "eu-west-1b",
+          "name": "aws-network-default-private-02",
+          "tf_name": "private",
+          "assoc_name": "private",
+          "assoc_index": "02",
+          "map_public_ip_on_launch": false,
+          "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_subnet.private[\"02\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-1b', 'cidr_block': '10.20.2.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+        }
+      ],
+      "route_tables": [
+        {
+          "address": "module.vpc_eu_west_1.aws_route_table.private",
+          "route_table_id": "module.vpc_eu_west_1.aws_route_table.private",
+          "vpc_id": null,
+          "name": "aws-network-default-private-rt",
+          "tf_name": "private",
+          "routes": [],
+          "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_route_table.private', rtype='aws_route_table', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-1', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+        }
+      ],
+      "internet_gateways": [],
+      "nat_gateways": [],
+      "route_table_associations": [
+        {
+          "address": "module.vpc_eu_west_1.aws_route_table_association.private[\"01\"]",
+          "assoc_name": "private",
+          "assoc_index": "01",
+          "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_route_table_association.private[\"01\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+        },
+        {
+          "address": "module.vpc_eu_west_1.aws_route_table_association.private[\"02\"]",
+          "assoc_name": "private",
+          "assoc_index": "02",
+          "resource": "PlannedResource(address='module.vpc_eu_west_1.aws_route_table_association.private[\"02\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_1')"
+        }
+      ],
+      "route53_zones": [
+        {
+          "address": "module.r53.aws_route53_zone.private",
+          "name": "prod.internal",
+          "vpcs": [
+            {
+              "vpc_region": "eu-west-1"
+            },
+            {
+              "vpc_region": "eu-west-2"
+            }
+          ],
+          "resource": "PlannedResource(address='module.r53.aws_route53_zone.private', rtype='aws_route53_zone', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'comment': 'Managed by Terraform', 'delegation_set_id': None, 'force_destroy': False, 'name': 'prod.internal', 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-zone', 'Project': 'aws-network'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-zone', 'Project': 'aws-network'}, 'timeouts': None, 'vpc': [{'vpc_region': 'eu-west-1'}, {'vpc_region': 'eu-west-2'}]}, depends_on=[], module_path='module.r53')"
+        }
+      ]
+    },
+    {
+      "vpc": {
+        "address": "module.vpc_eu_west_2.aws_vpc.this",
+        "id": "module.vpc_eu_west_2.aws_vpc.this",
+        "cidr_block": "10.21.0.0/16",
+        "name": "aws-network-default-vpc",
+        "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_vpc.this', rtype='aws_vpc', name='this', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_generated_ipv6_cidr_block': None, 'cidr_block': '10.21.0.0/16', 'enable_dns_hostnames': True, 'enable_dns_support': True, 'instance_tenancy': 'default', 'ipv4_ipam_pool_id': None, 'ipv4_netmask_length': None, 'ipv6_ipam_pool_id': None, 'ipv6_netmask_length': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-2'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-vpc', 'Project': 'aws-network', 'Region': 'eu-west-2'}}, depends_on=[], module_path='module.vpc_eu_west_2')"
+      },
+      "subnets": [
+        {
+          "address": "module.vpc_eu_west_2.aws_subnet.private[\"01\"]",
+          "vpc_id": null,
+          "subnet_id": "module.vpc_eu_west_2.aws_subnet.private[\"01\"]",
+          "cidr_block": "10.21.1.0/24",
+          "availability_zone": "eu-west-2a",
+          "name": "aws-network-default-private-01",
+          "tf_name": "private",
+          "assoc_name": "private",
+          "assoc_index": "01",
+          "map_public_ip_on_launch": false,
+          "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_subnet.private[\"01\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-2a', 'cidr_block': '10.21.1.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-01', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+        },
+        {
+          "address": "module.vpc_eu_west_2.aws_subnet.private[\"02\"]",
+          "vpc_id": null,
+          "subnet_id": "module.vpc_eu_west_2.aws_subnet.private[\"02\"]",
+          "cidr_block": "10.21.2.0/24",
+          "availability_zone": "eu-west-2b",
+          "name": "aws-network-default-private-02",
+          "tf_name": "private",
+          "assoc_name": "private",
+          "assoc_index": "02",
+          "map_public_ip_on_launch": false,
+          "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_subnet.private[\"02\"]', rtype='aws_subnet', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'assign_ipv6_address_on_creation': False, 'availability_zone': 'eu-west-2b', 'cidr_block': '10.21.2.0/24', 'customer_owned_ipv4_pool': None, 'enable_dns64': False, 'enable_lni_at_device_index': None, 'enable_resource_name_dns_a_record_on_launch': False, 'enable_resource_name_dns_aaaa_record_on_launch': False, 'ipv6_cidr_block': None, 'ipv6_native': False, 'map_customer_owned_ip_on_launch': None, 'map_public_ip_on_launch': False, 'outpost_arn': None, 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-02', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+        }
+      ],
+      "route_tables": [
+        {
+          "address": "module.vpc_eu_west_2.aws_route_table.private",
+          "route_table_id": "module.vpc_eu_west_2.aws_route_table.private",
+          "vpc_id": null,
+          "name": "aws-network-default-private-rt",
+          "tf_name": "private",
+          "routes": [],
+          "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_route_table.private', rtype='aws_route_table', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-rt', 'Project': 'aws-network', 'Region': 'eu-west-2', 'Tier': 'private'}, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+        }
+      ],
+      "internet_gateways": [],
+      "nat_gateways": [],
+      "route_table_associations": [
+        {
+          "address": "module.vpc_eu_west_2.aws_route_table_association.private[\"01\"]",
+          "assoc_name": "private",
+          "assoc_index": "01",
+          "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_route_table_association.private[\"01\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+        },
+        {
+          "address": "module.vpc_eu_west_2.aws_route_table_association.private[\"02\"]",
+          "assoc_name": "private",
+          "assoc_index": "02",
+          "resource": "PlannedResource(address='module.vpc_eu_west_2.aws_route_table_association.private[\"02\"]', rtype='aws_route_table_association', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'gateway_id': None, 'timeouts': None}, depends_on=[], module_path='module.vpc_eu_west_2')"
+        }
+      ],
+      "route53_zones": [
+        {
+          "address": "module.r53.aws_route53_zone.private",
+          "name": "prod.internal",
+          "vpcs": [
+            {
+              "vpc_region": "eu-west-1"
+            },
+            {
+              "vpc_region": "eu-west-2"
+            }
+          ],
+          "resource": "PlannedResource(address='module.r53.aws_route53_zone.private', rtype='aws_route53_zone', name='private', provider_name='registry.terraform.io/hashicorp/aws', values={'comment': 'Managed by Terraform', 'delegation_set_id': None, 'force_destroy': False, 'name': 'prod.internal', 'tags': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-zone', 'Project': 'aws-network'}, 'tags_all': {'Environment': 'default', 'ManagedBy': 'Terraform', 'Name': 'aws-network-default-private-zone', 'Project': 'aws-network'}, 'timeouts': None, 'vpc': [{'vpc_region': 'eu-west-1'}, {'vpc_region': 'eu-west-2'}]}, depends_on=[], module_path='module.r53')"
+        }
+      ]
+    }
+  ]
+}
